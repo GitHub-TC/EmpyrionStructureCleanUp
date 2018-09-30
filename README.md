@@ -3,7 +3,7 @@
 
 Eine übersetzte Version findet ihr im EmpyrionStructureCleanUp/bin Verzeichnis falls ihr die Mod nicht selbst prüfen und kompilieren wollt ;-)
 
-Oder hier: https://empyriononline.com/threads/mod-empyrion-chat-auto-translate.45125/
+Oder hier: https://empyriononline.com/threads/mod-empyrionstructurecleanup-in-shared-folder.45338/
 
 ### Wo für ist das?
 
@@ -24,7 +24,7 @@ Die Kommandos funktionieren NUR im Fraktionschat!
 
 * /struct help : Zeigt die Kommandos der Mod an
 
-#### Übersetzungseinstellungen/Möglichkeiten
+#### Kommandos/Möglichkeiten
 
 * /struct list => Informationen über die Strukturen und die möglichen Aufräumarbeiten
 * /struct help => Liste der Kommandos
@@ -57,7 +57,7 @@ English-Version:
 
 You can find a translated version in the EmpyrionStructureCleanUp / bin directory if you do not want to check and compile the mod myself ;-)
 
-Or here: https://empyriononline.com/threads/mod-empyrion-chat-auto-translate.45125/
+Or here: https://empyriononline.com/threads/mod-empyrionstructurecleanup-in-shared-folder.45338/
 
 ### What is it for?
 
@@ -76,14 +76,14 @@ The commands work ONLY in the fractional vote!
 
 #### Help
 
-* / struct help: Displays the commands of the mod
+* /struct help: Displays the commands of the mod
 
-#### Translation Settings / Options
+#### Commands / Options
 
-* / struct list => Information about the structures and the possible cleanups
-* / struct help => list of commands
-* / struct calc => re-examine objects and find the cleanup options
-* / struct cleanup => Perform the cleanup (whether a move or a delete takes place in the configuration)
+* /struct list => Information about the structures and the possible cleanups
+* /struct help => list of commands
+* /struct calc => re-examine objects and find the cleanup options
+* /struct cleanup => Perform the cleanup (whether a move or a delete takes place in the configuration)
 
 ### configuration
 A configuration can be found in the file (automatically created on first startup)

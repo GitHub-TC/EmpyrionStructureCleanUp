@@ -1,4 +1,4 @@
-﻿# Empyrion Chat Auto Translate
+﻿# Empyrion Structure Clean Up
 ## FAQ
 
 Eine übersetzte Version findet ihr im EmpyrionStructureCleanUp/bin Verzeichnis falls ihr die Mod nicht selbst prüfen und kompilieren wollt ;-)

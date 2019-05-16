@@ -3,12 +3,10 @@
 
 # build
 [Oo]bj/
-[Bb]in/*
-![Bb]in/EmpyrionTeleporter.dll
+[Bb]in/
 [Dd]ebug/
 packages/
 TestResults/
-EmpyrionTeleporter.Tests/[Bb]in
 
 # globs
 Makefile.in

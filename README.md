@@ -22,14 +22,14 @@ Die Kommandos funktionieren NUR im Fraktionschat!
 
 #### Hilfe
 
-* /struct help : Zeigt die Kommandos der Mod an
+* \struct help : Zeigt die Kommandos der Mod an
 
 #### Kommandos/Möglichkeiten
 
-* /struct list => Informationen über die Strukturen und die möglichen Aufräumarbeiten
-* /struct help => Liste der Kommandos
-* /struct calc => Objekte erneut untersuchen und die Aufräummöglichkeiten ermitteln
-* /struct cleanup => Das Aufräumen durchführen (ob dabei ein Verschieben oder Löschen stattfindet kann in der Konfiguration eingestellt werden)
+* \struct list => Informationen über die Strukturen und die möglichen Aufräumarbeiten
+* \struct help => Liste der Kommandos
+* \struct calc => Objekte erneut untersuchen und die Aufräummöglichkeiten ermitteln
+* \struct cleanup => Das Aufräumen durchführen (ob dabei ein Verschieben oder Löschen stattfindet kann in der Konfiguration eingestellt werden)
 
 ### Konfiguration
 Eine Konfiguration kann man in der Datei (wird beim ersten Start automatisch erstellt)
@@ -76,14 +76,14 @@ The commands work ONLY in the fractional vote!
 
 #### Help
 
-* /struct help: Displays the commands of the mod
+* \struct help: Displays the commands of the mod
 
 #### Commands / Options
 
-* /struct list => Information about the structures and the possible cleanups
-* /struct help => list of commands
-* /struct calc => re-examine objects and find the cleanup options
-* /struct cleanup => Perform the cleanup (whether a move or a delete takes place in the configuration)
+* \struct list => Information about the structures and the possible cleanups
+* \struct help => list of commands
+* \struct calc => re-examine objects and find the cleanup options
+* \struct cleanup => Perform the cleanup (whether a move or a delete takes place in the configuration)
 
 ### configuration
 A configuration can be found in the file (automatically created on first startup)

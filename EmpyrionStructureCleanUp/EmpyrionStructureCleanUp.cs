@@ -35,7 +35,6 @@ namespace EmpyrionStructureCleanUp
     {
         public ModGameAPI GameAPI { get; set; }
         public ConfigurationManager<Configuration> Configuration { get; set; }
-        public string StructureCleanUpsDBFilename { get; set; }
 
         private string mCalcHeadline;
         private string mCalcBody;
@@ -174,7 +173,7 @@ namespace EmpyrionStructureCleanUp
             var Timer = new Stopwatch();
             Timer.Start();
 
-            var MoveToDirectory = Path.Combine(Path.GetDirectoryName(StructureCleanUpsDBFilename), Configuration.Current.MoveToDirectory);
+            var MoveToDirectory = Path.Combine(EmpyrionConfiguration.SaveGamePath, Configuration.Current.MoveToDirectory);
             List<string> Errors = null;
             
             Array.ForEach(mPossibleCleanUpObjects, O => {

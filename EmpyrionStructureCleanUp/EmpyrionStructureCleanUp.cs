@@ -37,7 +37,6 @@ namespace EmpyrionStructureCleanUp
         public ConfigurationManager<Configuration> Configuration { get; set; }
         public string StructureCleanUpsDBFilename { get; set; }
 
-        FileSystemWatcher DBFileChangedWatcher;
         private string mCalcHeadline;
         private string mCalcBody;
         private string mCleanUpStatus;
@@ -59,19 +58,20 @@ namespace EmpyrionStructureCleanUp
         public override void Initialize(ModGameAPI aGameAPI)
         {
             GameAPI = aGameAPI;
-            this.LogLevel = LogLevel.Error;
 
             log($"**HandleEmpyrionStructureCleanUp loaded: {string.Join(" ", Environment.GetCommandLineArgs())}", LogLevel.Message);
 
             InitializeDB();
             LogLevel = Configuration.Current.LogLevel;
+            ChatCommandManager.CommandPrefix = Configuration.Current.ChatCommandPrefix;
 
-            ChatCommands.Add(new ChatCommand(@"\\struct help",       (I, A) => ExecCommand(SubCommand.Help,     I, A), "Show the help"                    , PermissionType.Admin));
-            ChatCommands.Add(new ChatCommand(@"\\struct list",       (I, A) => ExecCommand(SubCommand.List,     I, A), "List all structures"              , PermissionType.Admin));
-            ChatCommands.Add(new ChatCommand(@"\\struct calc",       (I, A) => ExecCommand(SubCommand.Calc,     I, A), "Calc all structures again"        , PermissionType.Admin));
-            ChatCommands.Add(new ChatCommand(@"\\struct cleanup",    (I, A) => ExecCommand(SubCommand.CleanUp,  I, A), "CleanUp old and unsued structures", PermissionType.Admin));
+            ChatCommands.Add(new ChatCommand(@"struct help",       (I, A) => ExecCommand(SubCommand.Help,     I, A), "Show the help"                    , PermissionType.Admin));
+            ChatCommands.Add(new ChatCommand(@"struct list",       (I, A) => ExecCommand(SubCommand.List,     I, A), "List all structures"              , PermissionType.Admin));
+            ChatCommands.Add(new ChatCommand(@"struct calc",       (I, A) => ExecCommand(SubCommand.Calc,     I, A), "Calc all structures again"        , PermissionType.Admin));
+            ChatCommands.Add(new ChatCommand(@"struct cleanup",    (I, A) => ExecCommand(SubCommand.CleanUp,  I, A), "CleanUp old and unsued structures", PermissionType.Admin));
 
-            CalcStructures(() => { if (Configuration.Current.CleanOnStartUp) CleanUpStructuresWorker(); }).Wait();
+            new Thread(() => CalcStructures(() => { if (Configuration.Current.CleanOnStartUp) CleanUpStructuresWorker(); }).Wait())
+                .Start();
         }
 
         private void InitializeDB()

@@ -13,5 +13,6 @@ namespace EmpyrionStructureCleanUp
         public string MoveToDirectory { get; set; } = @"..\..\..\..\CleanUp";
         public bool DeletePermanent { get; set; } = false;
         public bool CleanOnStartUp { get; set; } = false;
+        public string ChatCommandPrefix { get; set; } = "\\";
     }
 }

@@ -58,7 +58,7 @@ namespace EmpyrionStructureCleanUp
         {
             GameAPI = aGameAPI;
 
-            log($"**HandleEmpyrionStructureCleanUp loaded: {string.Join(" ", Environment.GetCommandLineArgs())}", LogLevel.Message);
+            Log($"**HandleEmpyrionStructureCleanUp loaded: {string.Join(" ", Environment.GetCommandLineArgs())}", LogLevel.Message);
 
             InitializeDB();
             LogLevel = Configuration.Current.LogLevel;
@@ -75,7 +75,7 @@ namespace EmpyrionStructureCleanUp
 
         private void InitializeDB()
         {
-            ConfigurationManager<Configuration>.Log = log;
+            ConfigurationManager<Configuration>.Log = Log;
             Configuration = new ConfigurationManager<Configuration>()
             {
                 ConfigFilename = Path.Combine(EmpyrionConfiguration.SaveGameModPath, "StructureCleanUpSettings.json")
@@ -94,7 +94,7 @@ namespace EmpyrionStructureCleanUp
 
         private async Task ExecCommand(SubCommand aCommand, ChatInfo info, Dictionary<string, string> args)
         {
-            log($"**HandleEmpyrionStructureCleanUp {info.type}#{aCommand}:{info.msg} {args.Aggregate("", (s, i) => s + i.Key + "/" + i.Value + " ")}", LogLevel.Message);
+            Log($"**HandleEmpyrionStructureCleanUp {info.type}#{aCommand}:{info.msg} {args.Aggregate("", (s, i) => s + i.Key + "/" + i.Value + " ")}", LogLevel.Message);
 
             if (info.type != (byte)ChatType.Faction) return;
 
@@ -144,7 +144,7 @@ namespace EmpyrionStructureCleanUp
                 FullTimer.Stop();
                 mCalcHeadline = $"Empyrion Structures (Playfields #{G.globalStructures.Count} Structures #{G.globalStructures.Aggregate(0, (c, p) => c + p.Value.Count)} load {Timer.Elapsed.TotalMilliseconds:N2}ms) total: {FullTimer.Elapsed.TotalSeconds:N2}s";
 
-                if (aExecAfter != null) aExecAfter();
+                aExecAfter?.Invoke();
             }).Start();
         }
 
@@ -190,14 +190,9 @@ namespace EmpyrionStructureCleanUp
             });
             Timer.Stop();
 
-            if (Errors != null) log(Errors.Aggregate("", (S, E) => S + E + "\n"), LogLevel.Error);
+            if (Errors != null) Log(Errors.Aggregate("", (S, E) => S + E + "\n"), LogLevel.Error);
 
-            mCleanUpStatus = $"ExecCleanUp: ({(Errors == null ? "success" : Errors.Count + " errors")} total: {Timer.Elapsed.TotalSeconds:N2}s";
-        }
-
-        private void LogError(string aPrefix, ErrorInfo aError)
-        {
-            log($"{aPrefix} Error: {aError.errorType} {aError.ToString()}", LogLevel.Error);
+            mCleanUpStatus = $"ExecCleanUp: ({(Errors == null ? "success" : Errors.Count + " errors")}) total: {Timer.Elapsed.TotalSeconds:N2}s";
         }
 
     }

@@ -69,7 +69,17 @@ namespace EmpyrionStructureCleanUp
             ChatCommands.Add(new ChatCommand(@"struct calc",       (I, A) => ExecCommand(SubCommand.Calc,     I, A), "Calc all structures again"        , PermissionType.Admin));
             ChatCommands.Add(new ChatCommand(@"struct cleanup",    (I, A) => ExecCommand(SubCommand.CleanUp,  I, A), "CleanUp old and unsued structures", PermissionType.Admin));
 
-            new Thread(() => CalcStructures(() => { if (Configuration.Current.CleanOnStartUp) CleanUpStructuresWorker(); }).Wait())
+            new Thread(() =>
+                {
+                    try
+                    {
+                        CalcStructures(() => { if (Configuration.Current.CleanOnStartUp) CleanUpStructuresWorker(); }).Wait();
+                    }
+                    catch (Exception error)
+                    {
+                        Log($"CalcStructures(Initialize): {error}", LogLevel.Error);
+                    }
+                })
                 .Start();
         }
 
@@ -126,25 +136,32 @@ namespace EmpyrionStructureCleanUp
             Timer.Stop();
 
             new Thread(() => {
-                var AllStructures = G.globalStructures.Aggregate(new List<GlobalStructureInfo>(), (L, GPL) => { L.AddRange(GPL.Value); return L; });
+                try
+                {
+                    var AllStructures = G.globalStructures.Aggregate(new List<GlobalStructureInfo>(), (L, GPL) => { L.AddRange(GPL.Value); return L; });
 
-                File.WriteAllText(Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Mods\EmpyrionStructureCleanUp\StructureCleanUpsDB.txt"),
-                        AllStructures.Aggregate("", (L, S) => L + $"{S.id} {(EntityType)S.type} {S.name}" + "\n")
-                    );
+                    File.WriteAllText(Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Mods\EmpyrionStructureCleanUp\StructureCleanUpsDB.txt"),
+                            AllStructures.Aggregate("", (L, S) => L + $"{S.id} {(EntityType)S.type} {S.name}" + "\n")
+                        );
 
-                var UnusedObjects = CleanUp.GetUnusedObjects(
-                    Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Shared"),
-                    AllStructures).ToArray();
+                    var UnusedObjects = CleanUp.GetUnusedObjects(
+                        Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Shared"),
+                        AllStructures).ToArray();
 
-                mPossibleCleanUpObjects = UnusedObjects.Where(O => (DateTime.Now - O.LastAccess).TotalDays > Configuration.Current.OnlyCleanIfOlderThan).ToArray();
+                    mPossibleCleanUpObjects = UnusedObjects.Where(O => (DateTime.Now - O.LastAccess).TotalDays > Configuration.Current.OnlyCleanIfOlderThan).ToArray();
 
-                var usedTypes = AllStructures.Distinct(new StructureTypeEqualityComparer());
-                mCalcBody     = usedTypes.Aggregate("", (L, T) => L + (EntityType)T.type + ": " + AllStructures.Count(S => S.type == T.type) + "\n") +
-                                $"\nUnused:{UnusedObjects.Length} ({UnusedObjects.Aggregate(0L, (S, O) => S + O.GetSize()) / (1024 * 1024):N2}MB) possible CleanUp:{mPossibleCleanUpObjects.Length} ({mPossibleCleanUpObjects.Aggregate(0L, (S, O) => S + O.GetSize()) / (1024 * 1024):N2}MB)";
-                FullTimer.Stop();
-                mCalcHeadline = $"Empyrion Structures (Playfields #{G.globalStructures.Count} Structures #{G.globalStructures.Aggregate(0, (c, p) => c + p.Value.Count)} load {Timer.Elapsed.TotalMilliseconds:N2}ms) total: {FullTimer.Elapsed.TotalSeconds:N2}s";
+                    var usedTypes = AllStructures.Distinct(new StructureTypeEqualityComparer());
+                    mCalcBody = usedTypes.Aggregate("", (L, T) => L + (EntityType)T.type + ": " + AllStructures.Count(S => S.type == T.type) + "\n") +
+                                    $"\nUnused:{UnusedObjects.Length} ({UnusedObjects.Aggregate(0L, (S, O) => S + O.GetSize()) / (1024 * 1024):N2}MB) possible CleanUp:{mPossibleCleanUpObjects.Length} ({mPossibleCleanUpObjects.Aggregate(0L, (S, O) => S + O.GetSize()) / (1024 * 1024):N2}MB)";
+                    FullTimer.Stop();
+                    mCalcHeadline = $"Empyrion Structures (Playfields #{G.globalStructures.Count} Structures #{G.globalStructures.Aggregate(0, (c, p) => c + p.Value.Count)} load {Timer.Elapsed.TotalMilliseconds:N2}ms) total: {FullTimer.Elapsed.TotalSeconds:N2}s";
 
-                aExecAfter?.Invoke();
+                    aExecAfter?.Invoke();
+                }
+                catch (Exception error)
+                {
+                    Log($"CalcStructures: {error}", LogLevel.Error);
+                }
             }).Start();
         }
 

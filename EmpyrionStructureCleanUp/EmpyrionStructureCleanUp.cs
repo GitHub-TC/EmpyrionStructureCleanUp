@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace EmpyrionStructureCleanUp
 {
@@ -140,13 +141,14 @@ namespace EmpyrionStructureCleanUp
                 {
                     var AllStructures = G.globalStructures.Aggregate(new List<GlobalStructureInfo>(), (L, GPL) => { L.AddRange(GPL.Value); return L; });
 
-                    File.WriteAllText(Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Mods\EmpyrionStructureCleanUp\StructureCleanUpsDB.txt"),
-                            AllStructures.Aggregate("", (L, S) => L + $"{S.id} {(EntityType)S.type} {S.name}" + "\n")
-                        );
+                    var saveGamePath = Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName);
 
-                    var UnusedObjects = CleanUp.GetUnusedObjects(
-                        Path.Combine(EmpyrionConfiguration.ProgramPath, @"Saves\Games\" + EmpyrionConfiguration.DedicatedYaml.SaveGameName + @"\Shared"),
-                        AllStructures).ToArray();
+                    var sb = new StringBuilder();
+                    AllStructures.ForEach(S => sb.AppendLine($"{S.id} {(EntityType)S.type} {S.name}"));
+
+                    File.WriteAllText(Path.Combine(saveGamePath, @"Mods\EmpyrionStructureCleanUp\StructureCleanUpsDB.txt"), sb.ToString());
+
+                    var UnusedObjects = CleanUp.GetUnusedObjects(Path.Combine(saveGamePath, "Shared"),AllStructures).ToArray();
 
                     mPossibleCleanUpObjects = UnusedObjects.Where(O => (DateTime.Now - O.LastAccess).TotalDays > Configuration.Current.OnlyCleanIfOlderThan).ToArray();
 

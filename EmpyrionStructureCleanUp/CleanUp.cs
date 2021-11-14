@@ -64,11 +64,7 @@ namespace EmpyrionStructureCleanUp
             var AllStructuresDict = aAllStructures.ToDictionary(S => S.id, S => S);
 
             return Directory.GetDirectories(aSharedPath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(D => {
-                        var NumberPos = D.LastIndexOf('_');
-                        return int.TryParse(D.Substring(NumberPos + 1), out int Id) && !AllStructuresDict.Keys.Contains(Id);
-                    }
-                )
+                .Where(D => int.TryParse(Path.GetFileName(D), out int Id) && !AllStructuresDict.Keys.Contains(Id))
                 .Select(D => new CleanUpStucture() {
                     DataDirectory     = D,
                     InfoFile = FindInfoFileFor(aSharedPath, D)
